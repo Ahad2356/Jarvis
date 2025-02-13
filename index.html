@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis, Virtual Assistant</title>
+  <link rel="shortcut icon" href="logo.jpg" type="image/x-icon">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nabla&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-direction: column;
+}
+#logo{
+    width: 20vw;
+}
+h1{
+    color: #0cc0df;
+    font-size: 40px;
+    font-family: "Major Mono Display", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+#name{
+    color: royalblue;
+    font-size: 60px;
+}
+#va{
+    color: magenta;
+    font-size: 50px;
+}
+#voice{
+    width: 150px;
+    display: none;
+}
+#btn{
+    width: 30%;
+    background: linear-gradient(to right, magenta, #0cc0df, royalblue);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 20px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 2px 2px 10px magenta, 2px 2px 10px #0cc0df, 2px 2px 10px royalblue;
+    border: none;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+#btn:hover{
+    box-shadow: 2px 2px 20px magenta, 2px 2px 20px #0cc0df, 2px 2px 20px royalblue;
+    letter-spacing: 2px;
+}
+  </style>
+</head>
+<body>
+    <img src="logo.jpg" alt="logo" id="logo">
+    <h1>I'm <span id="name">Jarvis</span>, <span id="va">Virtual Assistant</span></h1>
+    <img src="voice.gif" alt="voice" id="voice">
+    <button id="btn"><img src="mic.svg" alt="mic"><span id="content">Hey</span> </button>
+
+    <script>
+      let btn=document.querySelector("#btn")
+let content=document.querySelector("#content")
+let voice=document.querySelector("#voice")
+
+function speak(text){
+    let text_speak=new SpeechSynthesisUtterance(text)
+    text_speak.rate=1
+    text_speak.pitch=1
+    text_speak.volume=1
+    //text_speak.lang=""
+    window.speechSynthesis.speak(text_speak)
+}
+
+function wishMe(){
+    let day=new Date()
+    let hours=day.getHours()
+    if(hours>=0 && hours<12){
+        speak("Good Morning Sir")
+    }
+    else if(hours>=12 && hours <16){
+        speak("Good afternoon Sir")
+    }else{
+        speak("Good Evening Sir")
+    }
+}
+ window.addEventListener('load',()=>{
+    wishMe()
+})
+let speechRecognition= window.SpeechRecognition || window.webkitSpeechRecognition 
+let recognition =new speechRecognition()
+recognition.onresult=(event)=>{
+    let currentIndex=event.resultIndex
+    let transcript=event.results[currentIndex][0].transcript
+    content.innerText=transcript
+    takeCommand(transcript.toLowerCase())
+}
+
+btn.addEventListener("click",()=>{
+    recognition.start()
+    btn.style.display="none"
+    voice.style.display="block"
+})
+function takeCommand(message){
+    btn.style.display="flex"
+    voice.style.display="none"
+    if(message.includes("hello")||message.includes("hey")){
+        speak("Hello Sir,What can I help you?")
+    }
+    else if(message.includes("how are you")){
+        speak("I am fine")
+    }
+    else if(message.includes("who are you")){
+        speak("I am Jarvis Your Personal Ai Virtual Assistant, Created By Abdul Ahad Sir")
+    }
+    else if(message.includes("open youtube")){
+        speak("opening youtube....")
+        window.open("https://www.youtube.com")
+    }
+    else if(message.includes("open google")){
+        speak("opening google....")
+        window.open("https://www.google.com")
+    }
+    else if(message.includes("open facebook")){
+        speak("opening facebook....")
+        window.open("https://www.facebook.com")
+    }  
+    else if(message.includes("open instagram")||message.includes("open insta")){
+        speak("opening instagram....")
+        window.open("https://www.instagram.com")
+    }  
+    else if(message.includes("open tiktok")){
+        speak("opening tiktok....")
+        window.open("https://www.tiktok.com")
+    }  
+    else if(message.includes("open gmail")){
+        speak("opening gmail....")
+        window.open("https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox")
+    }  
+    else if(message.includes("check internet speed")||message.includes("jarvis check internet speed")||message.includes("hey jarvis check internet speed")){
+        speak("checking internet speed....")
+        window.open("https://fast.com/")
+    }
+    else if(message.includes("open calculator")){
+        speak("opening calculator.....")
+        window.open("calculator://")
+    }
+    else if(message.includes("open whatsapp")){
+        speak("opening whatsapp")
+        window.open("whatsapp://")
+    }
+    else if(message.includes("open whatsapp beta")){
+        speak("opening whatsapp beta")
+        window.open("whatsapp beta://")
+    }
+    else if(message.includes("time")){
+        let time=new Date().toLocaleString(undefined, {hour:"numeric", minute:"numeric"})
+        speak(time)
+    }
+    else if(message.includes("date")){
+        let date=new Date().toLocaleString(undefined, {day:"numeric", month:"short"})
+        speak(date)
+    }
+    else{
+        let finalText="this is what i found on internet" + message.replace("jarvis", "")
+        speak(finalText)
+        window.open(`https://www.google.com/search?q=${message.replace("jarvis", "")}`)
+    }        
+}
+    </script>
+</body>
+</html>
